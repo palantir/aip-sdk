@@ -12,7 +12,9 @@ The general way to use AIP is:
 Processors can be added to and removed from an enabled (live) pipeline, with AIP handling all the frame routing logic behind the scenes.
 
 # Implementing a Python inference processor
-The AIP SDK contains a fully-functional processor that uses PyTorch to perform plane detection. You can build the Docker image and run it out-of-the-box. Read on to better understand different parts of the implementation.
+The AIP SDK contains a fully-functional processor that uses PyTorch to perform plane detection. You can build the Docker image and run it out-of-the-box. Refer to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running.
+
+Read on to better understand different parts of the implementation.
 
 ## Pull proto files
 The latest proto files are [available for download here](https://bintray.com/palantir/releases/download_file?file_path=com%2Fpalantir%2Faip%2Fprocessors%2Fapi%2Faip-processor-api%2F0.0.1%2Faip-processor-api-0.0.1.jar). Download them, un-jar the file, and copy the `configuration-service.proto` and `processing-service-v2.proto` files into a `proto` folder, **created in the root folder**. That's it! When you build the docker image, the proto files will automatically be compiled.
