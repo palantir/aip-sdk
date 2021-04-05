@@ -57,7 +57,7 @@ Predicting on image...
 Sending InferenceResponse.
 ```
 
-## 5) Download and run the `aip-orchestrator`.
+## 5) [Download](https://publish.artifactory.palantir.build/ui/repos/tree/General/internal-dist-snapshot%2Fcom%2Fpalantir%2Faip%2Faip-orchestrator%2F1.35.0-19-ge15c432%2Faip-orchestrator-1.35.0-19-ge15c432.tgz) and run the `aip-orchestrator`
 
 The `aip-orchestrator` is a really simple AIP simulator that repeatedly sends the same image to the processor. Use it liberally
 to ensure that your processor receives requests correctly, responds to them in the right format, and can handle large loads
