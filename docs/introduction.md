@@ -90,7 +90,7 @@ Once you have determined what your processor's capability and image format shoul
 Here is how configuration happens, for an Inference processor requiring a RGB image:
 
 1) You implement the `Configure` method, like the following. Fill out the 4 required fields: `provider_name`, `provider_version`, `image_format` and `capabilities`.
-    <pre><code>
+```python
     def Configure(self,
                   request: api_conf.ConfigurationRequest,
                   context: grpc.RpcContext) -> api_conf.ConfigurationResponse:
@@ -109,7 +109,7 @@ Here is how configuration happens, for an Inference processor requiring a RGB im
                 )
             )
         )
-    </code></pre>
+```
 2) You run your processor on some port. This starts a gRPC server listening to a port.
 3) You add the processor to the AIP Config UI (on the left sidebar), including which port the processor is listening on. This way, AIP knows about the processor for the first time. (See next section for detailed guide and video walkthrough)
 4) When the processor is added, AIP sends a `ConfigurationRequest` to the processor at that port.
