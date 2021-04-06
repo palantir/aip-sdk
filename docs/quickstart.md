@@ -20,7 +20,7 @@ automatically compile it, and save the resulting .py files inside the image.
 ## 3) Now you're ready to build the sample processor! Build the docker image using the following command:
 ```bash
 cd <path to aip-sdk repository>
-docker build -t testplanemodel:1.0.0
+docker build --no-cache -t testplanemodel:1.0.0 .
 ```
 
 ## 4) Run the docker image with the following flags. This will start a processor on port 50051.
