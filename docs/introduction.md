@@ -4,10 +4,10 @@ AIP, or the AI Inference Platform, is Palantir Gotham's proprietary platform to 
 The AIP dev team builds, improves and maintains the base AIP platform, and allows users of AIP to build their own processors with custom processing logic that suits their needs. In most cases, AIP and processors communicate with each other over a gRPC channel. A processor is a gRPC server listening on some port, and is registered with AIP via the AIP Config UI. A processor can be implemented in any language as long as it conforms to the processing and configuration Protocol Buffer definitions laid out by AIP.
 
 The general way to use AIP is:
-1) Register one or more processor(s) of interest.
-2) Create a new pipeline with a video source and sink location. By default, it is disabled.
-3) Add the processor(s) to the pipeline.
-4) Enable the pipeline, then AIP starts feeding video frames through the pipeline.
+1. Register one or more processor(s) of interest.
+2. Create a new pipeline with a video source and sink location. By default, it is disabled.
+3. Add the processor(s) to the pipeline.
+4. Enable the pipeline, then AIP starts feeding video frames through the pipeline.
 
 Processors can be added to and removed from an enabled (live) pipeline, with AIP handling all the frame routing logic behind the scenes.
 
@@ -89,7 +89,7 @@ Once you have determined what your processor's capability and image format shoul
 
 Here is how configuration happens, for an Inference processor requiring a RGB image:
 
-1) You implement the `Configure` method, like the following. Fill out the 4 required fields: `provider_name`, `provider_version`, `image_format` and `capabilities`.
+1. You implement the `Configure` method, like the following. Fill out the 4 required fields: `provider_name`, `provider_version`, `image_format` and `capabilities`.
 ```python
     def Configure(self,
                   request: api_conf.ConfigurationRequest,
@@ -110,11 +110,11 @@ Here is how configuration happens, for an Inference processor requiring a RGB im
             )
         )
 ```
-2) You run your processor on some port. This starts a gRPC server listening to a port.
-3) You add the processor to the AIP Config UI (on the left sidebar), including which port the processor is listening on. This way, AIP knows about the processor for the first time. (See next section for detailed guide and video walkthrough)
-4) When the processor is added, AIP sends a `ConfigurationRequest` to the processor at that port.
-5) Your processor handles the request using the `Configure` handler defined above and sends back a `ConfigurationResponse`.
-6) AIP receives the response, and registers the processor along with its preferences. It is ready to start sending images in the expected format to the processor.
+2. You run your processor on some port. This starts a gRPC server listening to a port.
+3. You add the processor to the AIP Config UI (on the left sidebar), including which port the processor is listening on. This way, AIP knows about the processor for the first time. (See next section for detailed guide and video walkthrough)
+4. When the processor is added, AIP sends a `ConfigurationRequest` to the processor at that port.
+5. Your processor handles the request using the `Configure` handler defined above and sends back a `ConfigurationResponse`.
+6. AIP receives the response, and registers the processor along with its preferences. It is ready to start sending images in the expected format to the processor.
 
 Steps 1, 2, and 3 are what you have to do manually, while Steps 4 and 6 are what AIP does for you. Step 5 is merely where your implementation of the `Configure` method runs.
 
