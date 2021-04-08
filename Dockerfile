@@ -6,10 +6,13 @@ RUN apt-get update -qq \
   && apt-get install -y apt-utils \
   && apt-get upgrade -y \
   && apt-get install -y python3-pip python3-tk \
-  && apt-get install -y sudo curl git \
+  && apt-get install -y \
       build-essential \
-      clang libpython-dev libblocksruntime-dev \
-      libpython3.6 libxml2 \
+      clang \
+      libpython3-dev \
+      libblocksruntime-dev \
+      libpython3.6 \
+      libxml2 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
