@@ -2,6 +2,8 @@ from concurrent.futures import ThreadPoolExecutor
 import sys
 
 import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
 from grpc import (
@@ -75,9 +77,18 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
 
         return cfg
 
-    def predict_on_image(self, image_path):
-        print("Reading image at: " + image_path)
-        im = cv2.imread(image_path)
+    def _read_png_or_tiff(self, image):
+        return cv2.imread(image.path)
+
+    def _read_bgr888_or_rgb888(self, image):
+        with open(image.path, "rb") as infile:
+            data = infile.read()
+            arr = np.frombuffer(data, dtype=np.uint8)
+            return arr.reshape(image.height, image.width, 3)
+
+    def predict_on_image(self, image):
+        print("Reading image at: " + image.path)
+        im = self._read_bgr888_or_rgb888(image)
         print("Predicting on image...")
         return self.predictor(im)
 
@@ -95,7 +106,7 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
             )
         )
 
-        inference_results = self.predict_on_image(request.frame.image.bgr_image.path)
+        inference_results = self.predict_on_image(request.frame.image.bgr_image)
         print("Sending InferenceResponse.")
         print("----------------------------")
         return self.create_response(inference_results, request)
