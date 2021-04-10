@@ -2,10 +2,12 @@
 
 ## 1) Clone the AIP SDK source code from the [Github repository](https://github.palantir.build/video/aip-sdk).
 
-## 2) Download the public AIP Protocol Buffer interface files from [Bintray](https://bintray.com/palantir/releases/download_file?file_path=com%2Fpalantir%2Faip%2Fprocessors%2Fapi%2Faip-processor-api%2F0.0.1%2Faip-processor-api-0.0.1.jar).
-Extract the contents of the jar using the following command:
+## 2) Download the public AIP Protocol Buffer interface files from [Bintray](https://bintray.com/palantir/releases/aip-processor-api).
+The latest version is `0.0.2`.
+
+Extract the contents of the tarball using the following command:
 ```bash
-jar xf aip-processor-api-0.0.1.jar
+tar -xzvf <name of tar>
 ```
 
 Copy `processing-service-v2.proto` and `configuration-service.proto` into the `proto` folder of the repository:
