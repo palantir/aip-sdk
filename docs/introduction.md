@@ -1,23 +1,42 @@
+Jump to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running.
+
 # Introduction
-AIP, or the AI Inference Platform, is Palantir Gotham's proprietary platform to perform real-time augmentations and computations on streamed videos. AIP is the base platform that accepts video streams as input, and decodes them. Then, it runs the decoded video through zero or more "processor" services, which are responsible for actually processing the video. One common form of processing is to detect objects of a certain kind (using a pre-trained AI model) and augment the video with detections per frame. Another common form of processing is to identify the earth location where the video was taken, in precise latitudes and longitudes. AIP can handle any number of video streams simultaneously, also called "pipelines". More recently, AIP also added support for processing raw folders of images in lieu of video streams.
+AIP, or the AI Inference Platform, is Palantir Gotham's proprietary platform to perform real-time augmentations and computations on streamed videos or images. AIP is the base platform that runs images through zero or more "processor" services, which are responsible for actually processing functionality. One common form of processing is to detect objects of a certain kind (using a pre-trained AI model) and augment the metadata with detections per frame. Another common form of processing is to identify the earth location where the video was taken, in precise latitudes and longitudes. AIP can handle any number of inputs simultaneously, also called "pipelines".
 
 The AIP dev team builds, improves and maintains the base AIP platform, and allows users of AIP to build their own processors with custom processing logic that suits their needs. In most cases, AIP and processors communicate with each other over a gRPC channel. A processor is a gRPC server listening on some port, and is registered with AIP via the AIP Config UI. A processor can be implemented in any language as long as it conforms to the processing and configuration Protocol Buffer definitions laid out by AIP.
 
 The general way to use AIP is:
 1. Register one or more processor(s) of interest.
-2. Create a new pipeline with a video source and sink location. By default, it is disabled.
+2. Create a new pipeline with a source and sink location. By default, it is disabled.
 3. Add the processor(s) to the pipeline.
-4. Enable the pipeline, then AIP starts feeding video frames through the pipeline.
+4. Enable the pipeline, then AIP starts feeding frames through the pipeline.
 
 Processors can be added to and removed from an enabled (live) pipeline, with AIP handling all the frame routing logic behind the scenes.
 
-# Implementing a Python inference processor
-The AIP SDK contains a fully-functional processor that uses PyTorch to perform plane detection. You can build the Docker image and run it out-of-the-box. Refer to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running.
+# Getting Started with an AIP Processor
+The AIP SDK contains a fully-functional processor that uses PyTorch to perform plane detection. You can build the Docker image and run it out-of-the-box. Refer to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running, and to test it in action.
 
-Read on to better understand different parts of the implementation.
+Below are the contents of the SDK:
+```
+- inference_server.py (contains main processor logic)
+- Dockerfile (contains instructions to build the docker image)
+- generate_protos.sh (contains simple bash commands to compile the proto files in the proto folder)
+- model (contains a pre-trained model and config files, pulled from Detectron2's model zoo)
+    - Base-RCNN-FPN.yaml
+    - faster_rcnn_R_101_FPN_3x.yaml
+    - model_final_f6e8b1.pkl
+    - README.md
+- proto (contains the latest AIP gRPC interface proto files)
+    - __init__.py
+    - README.md
+- resources (contains a script that is executed during docker image build)
+    - install-python-packages.sh
+- LICENSE
+- README.md
+```
 
-## Pull proto files
-The latest proto files are [available for download here](https://bintray.com/palantir/releases/download_file?file_path=com%2Fpalantir%2Faip%2Fprocessors%2Fapi%2Faip-processor-api%2F0.0.1%2Faip-processor-api-0.0.1.jar). Download them, un-jar the file, and copy the `configuration-service.proto` and `processing-service-v2.proto` files into a `proto` folder, **created in the root folder**. That's it! When you build the docker image, the proto files will automatically be compiled.
+# Customizing the sample processor to your own needs
+To customize the sample processor, first you need to understand the major components that make it all work. Read on to better understand different parts of the implementation.
 
 ## Implement Infer method
 Implement Infer method in `inference_server.py`. This is the primary handler that should encapsulate inference logic. For example, it may make an external API call to a running model, or may invoke a locally running model. The argument is an `InferenceRequest`, which contains the image to run the model on and additional metadata if available. The expected return type is an `InferenceResponse` which contains results of model prediction on the image. Please refer to the proto file for the structures of these data types. They are pasted below for your easy reference, but note that the proto file is the ultimate source of truth for the latest structure.
@@ -75,7 +94,7 @@ message Inference {
 }
 ```
 
-## Advertise the INFER capability and expected image format
+## Advertise the correct capability and expected image format
 AIP processors are designed to be very versatile in functionality. They may be built to perform numerous augmentations or modifications to an incoming video frame. Currently, AIP primarily supports the following capabilities, in this order of importance:
 * Inference
     * Example: Running a model on the video frame or it's metadata, for classification, object detection, semantic segmentation and so on.
@@ -99,13 +118,13 @@ Here is how configuration happens, for an Inference processor requiring a RGB im
             request.orchestrator_version))
 
         return api_conf.ConfigurationResponse(
-            <b>provider_name="inference-server"</b>, # specify the name of your processor (you can make one up)
-            <b>provider_version="0.1.0"</b>, # specify the version of your processor (as per your own versioning schema)
+            provider_name="inference-server", # specify the name of your processor (you can make one up)
+            provider_version="0.1.0", # specify the version of your processor (as per your own versioning schema)
             version=api_conf.ProtocolVersion(
                 v2=api_proc.ProcessorV2Config(
-                    <b>image_format=api_proc.RGB888</b>, # you could also specify BGR888 if you prefer BGR images instead
+                    image_format=api_proc.RGB888, # you could also specify BGR888 if you prefer BGR images instead
                     capabilities=[
-                        <b>api_proc.ProcessorV2Config.Capability.INFER</b>], # specify INFER capability here (refer to proto file for list of supported capabilities)
+                        api_proc.ProcessorV2Config.Capability.INFER], # specify INFER capability here (refer to proto file for list of supported capabilities)
                 )
             )
         )
@@ -118,7 +137,7 @@ Here is how configuration happens, for an Inference processor requiring a RGB im
 
 Steps 1, 2, and 3 are what you have to do manually, while Steps 4 and 6 are what AIP does for you. Step 5 is merely where your implementation of the `Configure` method runs.
 
-## Adding a processor in the AIP Config UI
+## (When testing against the real AIP) Adding a processor in the AIP Config UI
 
 ### Video Walkthrough
 [Watch this walkthrough video](https://palantir.box.com/s/g58r83a5ney9uvhlyfx763pepbt7r6lb) to create your first processor and add it to a pipeline via the AIP Config App. For most use cases, the video provides the simplest way to get your processor up and running quickly.
