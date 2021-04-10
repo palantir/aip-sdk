@@ -1,3 +1,7 @@
+"""
+(c) Copyright 2021 Palantir Technologies Inc. All rights reserved.
+"""
+
 from concurrent.futures import ThreadPoolExecutor
 import sys
 
