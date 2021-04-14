@@ -2,8 +2,7 @@
 
 ## 1) Clone the AIP SDK source code from the [Github repository](https://github.palantir.build/video/aip-sdk).
 
-## 2) Download the public AIP Protocol Buffer interface files from [Bintray](https://bintray.com/palantir/releases/aip-processor-api).
-The latest version is `0.0.2`.
+## 2) Download the public AIP Protocol Buffer interface files in .tar format from [Maven Central](https://search.maven.org/artifact/com.palantir.aip.processors.api/aip-processor-api).
 
 Extract the contents of the tarball using the following command:
 ```bash
