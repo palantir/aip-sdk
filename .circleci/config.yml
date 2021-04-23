@@ -6,10 +6,8 @@ jobs:
     - image: "python:3.5-stretch"
     steps:
     - checkout
-    - run: pip install pylint pycodestyle pyflakes
-    - run: pylint inference_server.py
-    - run: pycodestyle inference_server.py
-    - run: pyflakes inference_server.py
+    - run: python3 -m pip install flake8
+    - run: flake8 inference_server.py
 
 
 workflows:
