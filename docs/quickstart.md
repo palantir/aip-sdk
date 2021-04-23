@@ -1,6 +1,6 @@
 # Quickstart
 
-## 1) Clone the AIP SDK source code from the [Github repository](https://github.palantir.build/video/aip-sdk).
+## 1) Clone the AIP SDK source code from the [Github repository](https://github.com/palantir/aip-sdk).
 
 ## 2) Download the public AIP Protocol Buffer interface files in .tar format from [Maven Central](https://search.maven.org/artifact/com.palantir.aip.processors.api/aip-processor-api).
 
