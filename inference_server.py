@@ -7,14 +7,9 @@ import sys
 
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
-from grpc import (
-    ServicerContext,
-    server,
-    RpcContext
-)
+from grpc import ServicerContext, server, RpcContext
 
 from proto import configuration_service_pb2 as api_conf
 from proto import configuration_service_pb2_grpc as api_conf_grpc
@@ -35,14 +30,19 @@ class InferenceConfiguration(api_conf_grpc.ConfigurationServiceServicer):
         )
 
         return api_conf.ConfigurationResponse(
-            provider_name="inference-server",  # TODO: replace with your own processor name
-            provider_version="0.1.0",  # TODO: replace with your own processor version (as per your own versioning schema)
+            # TODO: replace with your own processor name
+            provider_name="inference-server",
+            # TODO: replace with your own processor version (as per your own
+            # versioning schema)
+            provider_version="0.1.0",
             version=api_conf.ProtocolVersion(
                 v2=api_proc.ProcessorV2Config(
-                    image_format=api_proc.BGR888,  # TODO: replace with image format you expect
+                    # TODO: replace with your expected image format
+                    image_format=api_proc.BGR888,
+                    # TODO: replace with your processor's capabilities
                     capabilities=[
                         api_proc.ProcessorV2Config.Capability.INFER
-                    ],  # TODO: replace with the capabilities offered by your processor
+                    ],
                 )
             ),
         )
@@ -59,9 +59,10 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
         self.thread_pool = thread_pool
 
         # This is where Detectron2's model is loaded.
-        # The `DefaultPredictor` expects a BGR image for inference, so we have specified the image format
-        # as `BGR888` during the configuration step, and also read the `bgr_image.path` field from
-        # the `InferenceRequest`.
+        # The `DefaultPredictor` expects a BGR image for inference, so we have
+        # specified the image format as `BGR888` during the configuration
+        # step, and also read the `bgr_image.path` field from the
+        # `InferenceRequest`.
         self.predictor = DefaultPredictor(self.model_cfg)
 
     def _configure_model(self):
@@ -73,11 +74,13 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
             256  # faster, and good enough for this toy dataset (default: 512)
         )
         cfg.MODEL.ROI_HEADS.NUM_CLASSES = 3
-        cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.1  # set a custom testing threshold
+        # set a custom testing threshold
+        cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.1
 
         # TODO: Specify device to run model on.
+        # TODO: Also set CUDA_VISIBLE_DEVICES when running the processor.
         cfg.MODEL.DEVICE = "cpu"  # run inference on the CPU
-        # cfg.MODEL.DEVICE='cuda:1' # use this instead to run it on GPU 1. Make sure to also set CUDA_VISIBLE_DEVICES when running the processor.
+        # cfg.MODEL.DEVICE='cuda:1' # use this instead to run it on GPU 1.
 
         return cfg
 
@@ -102,7 +105,8 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
         # TODO: implement this method to invoke your model
 
         print(
-            "[GRPC] Frame #{} received. Stream_id: {}. gRPC: {} tasks / {} threads".format(
+            ("[GRPC] Frame #{} received. Stream_id: {}."
+             "gRPC: {} tasks / {} threads").format(
                 request.header.identifier.frame_id,
                 request.header.identifier.stream_id,
                 self.thread_pool._work_queue.qsize(),
@@ -110,13 +114,15 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
             )
         )
 
-        inference_results = self.predict_on_image(request.frame.image.bgr_image)
+        inference_results = self.predict_on_image(
+            request.frame.image.bgr_image)
         print("Sending InferenceResponse.")
         print("----------------------------")
         return self.create_response(inference_results, request)
 
     def create_response(self, inference_results, request):
-        # TODO: modify this method to construct InferenceResponse based on your inference results
+        # TODO: modify this method to construct InferenceResponse based on your
+        # inference results
         list_of_inferences = []
         inference_instances = inference_results["instances"]
 
@@ -143,7 +149,8 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
             box = api_proc.BoundingBox(
                 c0=upper_left, c1=lower_right, classifications=classifications
             )
-            list_of_inferences.append(api_proc.Inference(inferenceId=str(i), box=box))
+            list_of_inferences.append(
+                api_proc.Inference(inferenceId=str(i), box=box))
 
         return api_proc.InferenceResponse(
             identifier=request.header.identifier,
@@ -152,13 +159,15 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
 
 
 def main():
-    # TODO: specify how many gRPC server threads should handle incoming requests.
-    # If all threads are being used, newer requests are automatically queued,
-    # as long as we're not at the limit of maximum_concurrent_rpcs (see below)
+    # TODO: specify how many gRPC server threads should handle incoming
+    # requests. If all threads are being used, newer requests are
+    # automatically queued, as long as we're not at the limit of
+    # maximum_concurrent_rpcs (see below)
     thread_pool = ThreadPoolExecutor(max_workers=8)
 
     # TODO: specify how many requests can be concurrently processed
-    # if another request comes in during that time, it is automatically rejected by gRPC
+    # if another request comes in during that time, it is automatically
+    # rejected by gRPC
     srv = server(thread_pool, maximum_concurrent_rpcs=8)
     api_conf_grpc.add_ConfigurationServiceServicer_to_server(
         InferenceConfiguration(), srv
