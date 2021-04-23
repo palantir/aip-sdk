@@ -6,5 +6,5 @@ The AIP dev team builds, improves and maintains the base AIP platform, and allow
 # Getting Started
 This SDK contains everything you need to get started building and testing an inference processor that runs images through a model for object detection, including a sample processor that runs out-of-the-box.
 
-Refer to the [Introduction](https://pages.github.palantir.build/video/aip-sdk/introduction) for an in-depth exploration of how to implement AIP processors for inference capabilities.
-Refer to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running in minutes.
+Refer to the [Introduction](https://palantir.github.io/aip-sdk/introduction) for an in-depth exploration of how to implement AIP processors for inference capabilities.
+Refer to the [Quickstart](https://palantir.github.io/aip-sdk/quickstart) for simple steps to get the sample processor up and running in minutes.
