@@ -1,4 +1,4 @@
-Jump to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running.
+Jump to the [Quickstart](https://palantir.github.io/aip-sdk/quickstart) for simple steps to get the sample processor up and running.
 
 # Introduction
 AIP, or the AI Inference Platform, is Palantir Gotham's platform to perform real-time augmentations and computations on streamed videos or images. AIP is the base platform that runs images through zero or more "processor" services, which are responsible for actually processing functionality. One common form of processing is to detect objects of a certain kind (using a pre-trained AI model) and augment the metadata with detections per frame. Another common form of processing is to identify the earth location where the video was taken, in precise latitudes and longitudes. AIP can handle any number of inputs simultaneously, also called "pipelines".
@@ -14,7 +14,7 @@ The general way to use AIP is:
 Processors can be added to and removed from an enabled (live) pipeline, with AIP handling all the frame routing logic behind the scenes.
 
 # Getting Started with an AIP Processor
-The AIP SDK contains a fully-functional processor that uses PyTorch to perform plane detection. You can build the Docker image and run it out-of-the-box. Refer to the [Quickstart](https://pages.github.palantir.build/video/aip-sdk/quickstart) for simple steps to get the sample processor up and running, and to test it in action.
+The AIP SDK contains a fully-functional processor that uses PyTorch to perform plane detection. You can build the Docker image and run it out-of-the-box. Refer to the [Quickstart](https://palantir.github.io/aip-sdk/quickstart) for simple steps to get the sample processor up and running, and to test it in action.
 
 Below are the contents of the SDK:
 ```
