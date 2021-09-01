@@ -90,14 +90,14 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
                 lower_right = api_proc.UnitCoordinate(
                     row=x2, col=y2
                 )
-                
+
                 if int(detection_classes[i]) == 1:
                     # End of detections
                     break
 
                 if str(int(detection_classes[i])) not in self.class_names:
-                 print(f"Detected unknown object of class {int(detection_classes[i])}")
-                     continue
+                    print(f"Detected unknown object of class {int(detection_classes[i])}")
+                    continue
 
                 classifications = [
                     api_proc.Classification(
