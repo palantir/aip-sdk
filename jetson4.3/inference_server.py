@@ -92,7 +92,7 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
                 )
 
                 if int(detection_classes[i]) == 1:
-                    # End of detections
+                    # End of interesting detections
                     break
 
                 if str(int(detection_classes[i])) not in self.class_names:
