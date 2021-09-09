@@ -1,0 +1,21 @@
+# Installing NVIDIA Jetpack 4.6 using `apt`: https://docs.nvidia.com/jetson/jetpack/install-jetpack/index.html#install-jetpack
+
+# automatically pulls the nvidia ML image for the Jetson 4.6
+FROM nvcr.io/nvidia/l4t-ml:r32.6.1-py3
+
+ARG DEBIAN_FRONTEND=noninteractive
+WORKDIR /jetson_processor
+# update is very important
+RUN apt-get update -qq && python3 -m pip install grpcio grpcio-tools mypy-protobuf
+
+# copy all other files now so we can edit them without Docker re-installing everything above
+COPY jetson/ .
+COPY ./proto proto
+COPY download_and_compile_protos.sh .
+
+# compile the AIP processing service v2 protocol buffer interfaces
+RUN chmod +x ./download_and_compile_protos.sh
+RUN ./download_and_compile_protos.sh
+# the server will wait for inference requests on port 50051
+EXPOSE 50051
+CMD ["python3", "inference_server.py", "50051"]

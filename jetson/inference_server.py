@@ -4,6 +4,7 @@
 
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
 
 import time
 from grpc import ServicerContext, server, RpcContext
@@ -18,7 +19,7 @@ from model import InferenceModel
 
 PORT = 50051
 # change this path to your own TF 1.15 frozen inference graph
-FROZEN_GRAPH_PATH = "/jetson_4.3_processor/ssd_mobilenet_v2_oid_v4_2018_12_12_frozen_graph.pb"
+FROZEN_GRAPH_PATH = "/jetson_processor/ssd_mobilenet_v2_oid_v4_2018_12_12_frozen_graph.pb"
 
 
 class InferenceConfiguration(api_conf_grpc.ConfigurationServiceServicer):
@@ -45,10 +46,15 @@ class InferenceConfiguration(api_conf_grpc.ConfigurationServiceServicer):
         )
 
 
+def default_detection():
+    return "generic detection"
+
+
 class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
     def __init__(self, thread_pool, inference_model):
         # specify your own dictionary of class ids to names here
-        self.class_names = {"391": "tree"}
+        self.class_names = defaultdict(default_detection)
+        self.class_names["391"] = "tree"
         self.thread_pool = thread_pool
         self.inference_model = inference_model
 

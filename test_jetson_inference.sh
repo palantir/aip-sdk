@@ -12,4 +12,4 @@ if [ -z "${t}" ]
     usage
 fi
 
-sudo docker run -v /usr:/usr -v /dev/shm/aip/images:/dev/shm/aip/images --rm --device=/dev/nvhost-ctrl  --device=/dev/nvhost-ctrl-gpu  --device=/dev/nvhost-prof-gpu  --device=/dev/nvmap  --device=/dev/nvhost-gpu  --device=/dev/nvhost-as-gpu --runtime=nvidia --network=host -it "${t}" python3 test_model.py
+sudo docker run -v /usr:/usr -v /tmp:/tmp -v /dev/shm/aip/images:/dev/shm/aip/images --rm --device=/dev/nvhost-ctrl  --device=/dev/nvhost-ctrl-gpu  --device=/dev/nvhost-prof-gpu  --device=/dev/nvmap  --device=/dev/nvhost-gpu  --device=/dev/nvhost-as-gpu --runtime=nvidia --network=host -it "${t}" python3 test_model.py

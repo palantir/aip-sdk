@@ -1,5 +1,15 @@
 # Quickstart
 
+Jump to the [Introduction](https://palantir.github.io/aip-sdk/introduction) for a brief introduction to the AIP SDK.
+
+The AIP SDK contains three fully-functional processors. 
+One uses PyTorch to perform plane detection and runs on an x86 64 bit machine. 
+The other two use a model trained on the OpenImages v4 dataset (so it can detect a lot of common things) 
+and runs on an NVIDIA Jetson AGX Xavier. Of these last two processors that use the OpenImages model, one is configured to run with JetPack 4.3,
+whereas the second is configured to run with JetPack 4.6
+You can build these Docker images and run them out-of-the-box.
+
+
 ## x86 64 bit processor
 
 ### 1) Clone the AIP SDK source code from the [Github repository](https://github.com/palantir/aip-sdk)
@@ -82,10 +92,18 @@ Orchestrator received inference response for frame id <frame id>:
 ## Jetson processor
 
 ### 1) Clone the AIP SDK source code from the [Github repository](https://github.com/palantir/aip-sdk)
-
+Note: Please make sure GIT LFS is installed when cloning. More information on the
+[official website](https://git-lfs.github.com/) of git-lfs.
 ### 2) Build the processor (will take a while)
+
+For Jetson 4.3:
 ```bash
 ./build_image.sh -f Dockerfile.jetson43 -t myjetsonprocessor:1.0.0
+```
+
+For Jetson 4.6:
+```bash
+./build_image.sh -f Dockerfile.jetson46 -t myjetsonprocessor:1.0.0
 ```
 
 ### 3) Test the processor
