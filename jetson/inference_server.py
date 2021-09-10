@@ -102,7 +102,7 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
                     break
 
                 if str(int(detection_classes[i])) not in self.class_names:
-                    print(f"Detected unknown object of class {int(detection_classes[i])}")
+                    print("Detected unknown object of class" + int(detection_classes[i]))
                     continue
 
                 classifications = [
