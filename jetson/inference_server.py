@@ -120,7 +120,7 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
             print("Exception while creating inference list", e)
             pass
 
-        print(f"Inference list: {list_of_inferences}")
+        print("Inference list: " + list_of_inferences)
         resp = api_proc.InferenceResponse(
             identifier=request.header.identifier,
             inferences=api_proc.Inferences(inference=list_of_inferences),
