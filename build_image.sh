@@ -13,4 +13,4 @@ if [ -z "${f}" ] || [ -z "${t}" ]
     usage
 fi
 
-sudo docker build . -f "${f}" -t "${t}"
+sudo docker build --network host . -f "${f}" -t "${t}"
