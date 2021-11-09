@@ -102,12 +102,7 @@ Orchestrator received inference response for frame id <frame id>:
 Note: Please make sure GIT LFS is installed when cloning. More information on the
 [official website](https://git-lfs.github.com/) of git-lfs.
 
-### 2) Copy folders needed to pass credentials to Docker
-```bash
-sudo bash ./sync_docker_keys.sh
-```
-
-### 3) Build the processor (will take a while)
+### 2) Build the processor (will take a while)
 
 For Jetson 4.3:
 ```bash
@@ -119,21 +114,21 @@ For Jetson 4.6:
 ./build_image.sh -f Dockerfile.jetson46 -t myjetsonprocessor:1.0.0
 ```
 
-### 4) Test the processor
+### 3) Test the processor
 ```bash
 ./test_jetson_inference.sh -t myjetsonprocessor:1.0.0
 ```
 
 This will perform inference a few times on a test image and print the output predictions and inference times.
 
-### 5) Run the processor on port 50051 (default)
+### 4) Run the processor on port 50051 (default)
 ```bash
 ./start_jetson_container.sh -t 'myjetsonprocessor:1.0.0'
 ```
 
 Once it has successfully started, you can use the real AIP to send it requests. The jetson processor does not work with the orchestrator.
 
-### 6) Adding additional arguments to the processor
+### 5) Adding additional arguments to the processor
  
 The jetson processor accepts additional configuration 
 
