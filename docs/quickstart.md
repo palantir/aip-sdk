@@ -13,13 +13,20 @@ You can build these Docker images and run them out-of-the-box.
 ## x86 64 bit processor
 
 ### 1) Clone the AIP SDK source code from the [Github repository](https://github.com/palantir/aip-sdk)
+Note: Please make sure GIT LFS is installed when cloning. More information on the
+[official website](https://git-lfs.github.com/) of git-lfs.
 
-### 2) Build the processor
+### 2) Copy folders needed to pass credentials to Docker
+```bash
+sudo bash ./sync_docker_keys.sh
+```
+
+### 3) Build the processor
 ```bash
 ./build_image.sh -f Dockerfile.x86_64 -t myx86processor:1.0.0
 ```
 
-### 3) Run the processor on port 50051 (default)
+### 4) Run the processor on port 50051 (default)
 ```bash
 ./start_x86_64_container.sh -t myx86processor:1.0.0
 ```
@@ -43,7 +50,7 @@ Predicting on image...
 Sending InferenceResponse.
 ```
 
-### 4) [Download](https://repo1.maven.org/maven2/com/palantir/aip/processing/aip-test-orchestrator/v1.4/aip-test-orchestrator-v1.4.tar) and run the `aip-test-orchestrator`
+### 5) [Download](https://repo1.maven.org/maven2/com/palantir/aip/processing/aip-test-orchestrator/v1.4/aip-test-orchestrator-v1.4.tar) and run the `aip-test-orchestrator`
 
 The `aip-test-orchestrator` is a really simple AIP simulator that repeatedly sends the same image to the processor. Use it liberally
 to ensure that your processor receives requests correctly, responds to them in the right format, and can handle large loads
@@ -94,7 +101,13 @@ Orchestrator received inference response for frame id <frame id>:
 ### 1) Clone the AIP SDK source code from the [Github repository](https://github.com/palantir/aip-sdk)
 Note: Please make sure GIT LFS is installed when cloning. More information on the
 [official website](https://git-lfs.github.com/) of git-lfs.
-### 2) Build the processor (will take a while)
+
+### 2) Copy folders needed to pass credentials to Docker
+```bash
+sudo bash ./sync_docker_keys.sh
+```
+
+### 3) Build the processor (will take a while)
 
 For Jetson 4.3:
 ```bash
@@ -106,21 +119,21 @@ For Jetson 4.6:
 ./build_image.sh -f Dockerfile.jetson46 -t myjetsonprocessor:1.0.0
 ```
 
-### 3) Test the processor
+### 4) Test the processor
 ```bash
 ./test_jetson_inference.sh -t myjetsonprocessor:1.0.0
 ```
 
 This will perform inference a few times on a test image and print the output predictions and inference times.
 
-### 4) Run the processor on port 50051 (default)
+### 5) Run the processor on port 50051 (default)
 ```bash
 ./start_jetson_container.sh -t 'myjetsonprocessor:1.0.0'
 ```
 
 Once it has successfully started, you can use the real AIP to send it requests. The jetson processor does not work with the orchestrator.
 
-### 5) Adding additional arguments to the processor
+### 6) Adding additional arguments to the processor
  
 The jetson processor accepts additional configuration 
 
