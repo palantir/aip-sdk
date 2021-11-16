@@ -76,12 +76,12 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
         return self.create_response(inference_results, request)
 
     def create_response(self, inference_results, request):
+        list_of_inferences = []
         try:
             detection_boxes = inference_results["detection_boxes"][0]
             detection_classes = inference_results["detection_classes"][0]
             detection_scores = inference_results["detection_scores"][0]
 
-            list_of_inferences = []
             for i in range(len(detection_boxes)):
                 x, y, x2, y2 = detection_boxes[i]
                 upper_left = api_proc.UnitCoordinate(
@@ -90,6 +90,15 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
                 lower_right = api_proc.UnitCoordinate(
                     row=x2, col=y2
                 )
+
+                if int(detection_classes[i]) == 1:
+                    # End of interesting detections
+                    break
+
+                if str(int(detection_classes[i])) not in self.class_names:
+                    print("Detected unknown object of class" + int(detection_classes[i]))
+                    continue
+
                 classifications = [
                     api_proc.Classification(
                         type=self.class_names[str(
@@ -102,9 +111,10 @@ class InferenceServer(api_proc_grpc.ProcessingServiceServicer):
                 list_of_inferences.append(
                     api_proc.Inference(inferenceId=str(i), box=box))
         except Exception as e:
-            print(e)
-            raise e
+            print("Exception while creating inference list", e)
+            pass
 
+        print("Inference list: " + list_of_inferences)
         resp = api_proc.InferenceResponse(
             identifier=request.header.identifier,
             inferences=api_proc.Inferences(inference=list_of_inferences),
